@@ -465,7 +465,7 @@ genrule(
         "wellknown.srcjar"
     ],
     cmd = "$(location :protoc) --java_out=$(@D)/wellknown.jar" +
-        " -Isrc $(SRCS) " +
+        " -Igoogle/protobuf/src $(SRCS) " +
         " && mv $(@D)/wellknown.jar $(@D)/wellknown.srcjar",
     tools = [":protoc"],
 )
