@@ -190,7 +190,7 @@ header "Ensuring the ObjC descriptors are current."
 readonly NewestInput=$(find \
    src/google/protobuf/*.proto \
    src/.libs src/*.la src/protoc \
-   objectivec/generate_descriptors_proto.sh \
+   objectivec/generate_well_known_types.sh \
       -type f -print0 \
       | xargs -0 stat -f "%m %N" \
       | sort -n | tail -n1 | cut -f2- -d" ")
@@ -203,7 +203,7 @@ readonly OldestOutput=$(find \
 # If the newest input is newer than the oldest output, regenerate.
 if [[ "${NewestInput}" -nt "${OldestOutput}" ]] ; then
   echo ">> Newest input is newer than oldest output, regenerating."
-  objectivec/generate_descriptors_proto.sh -j "${NUM_MAKE_JOBS}"
+  objectivec/generate_well_known_types.sh -j "${NUM_MAKE_JOBS}"
 else
   echo ">> Newest input is older than oldest output, no need to regenerating."
 fi
@@ -234,12 +234,20 @@ if [[ "${DO_XCODE_IOS_TESTS}" == "yes" ]] ; then
       echo "ERROR: Xcode 6.3/6.4 no longer supported for building, please use 7.0 or higher." 1>&2
       exit 10
       ;;
-    7.* )
+    7.1* )
       XCODEBUILD_TEST_BASE_IOS+=(
           -destination "platform=iOS Simulator,name=iPhone 4s,OS=8.1" # 32bit
           -destination "platform=iOS Simulator,name=iPhone 6,OS=9.0" # 64bit
           -destination "platform=iOS Simulator,name=iPad 2,OS=8.1" # 32bit
           -destination "platform=iOS Simulator,name=iPad Air,OS=9.0" # 64bit
+      )
+      ;;
+    7.* )
+      XCODEBUILD_TEST_BASE_IOS+=(
+          -destination "platform=iOS Simulator,name=iPhone 4s,OS=8.1" # 32bit
+          -destination "platform=iOS Simulator,name=iPhone 6,OS=9.2" # 64bit
+          -destination "platform=iOS Simulator,name=iPad 2,OS=8.1" # 32bit
+          -destination "platform=iOS Simulator,name=iPad Air,OS=9.2" # 64bit
       )
       ;;
     * )
