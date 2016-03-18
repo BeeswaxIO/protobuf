@@ -208,7 +208,7 @@ def internal_gen_well_known_protos_java(srcs):
   """
   root = Label("%s//protobuf_java" % (REPOSITORY_NAME)).workspace_root
   if root == "":
-    include = " -Isrc "
+    include = " -Igoogle/protobuf/src "
   else:
     include = " -I%s/src " % root
   native.genrule(
